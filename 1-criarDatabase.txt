@@ -1,0 +1,129 @@
+CREATE SCHEMA `empresa` ;
+
+CREATE TABLE `empresa`.`tipo_emprestimo` (
+  `idtipo_emprestimo` INT NOT NULL AUTO_INCREMENT,
+  `tipo` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idtipo_emprestimo`),
+  UNIQUE INDEX `idtipo_emprestimo_UNIQUE` (`idtipo_emprestimo` ASC) VISIBLE,
+  UNIQUE INDEX `tipo_UNIQUE` (`tipo` ASC) VISIBLE);
+
+CREATE TABLE `empresa`.`tipo_funcionario` (
+  `idtipo_funcionario` INT NOT NULL AUTO_INCREMENT,
+  `funcao` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idtipo_funcionario`),
+  UNIQUE INDEX `idtipo_funcionario_UNIQUE` (`idtipo_funcionario` ASC) VISIBLE,
+  UNIQUE INDEX `funcao_UNIQUE` (`funcao` ASC) VISIBLE);
+
+CREATE TABLE `empresa`.`funcionario` (
+  `idfuncionario` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL,
+  `cpf` VARCHAR(45) NOT NULL,
+  `endereco` VARCHAR(45) NULL,
+  `telefone` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `tipo_funcionario` INT NOT NULL,
+  PRIMARY KEY (`idfuncionario`),
+  UNIQUE INDEX `idfuncionario_UNIQUE` (`idfuncionario` ASC) VISIBLE,
+  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) VISIBLE,
+  INDEX `tipo_funcionario_idx` (`tipo_funcionario` ASC) VISIBLE,
+  CONSTRAINT `tipo_funcionario`
+    FOREIGN KEY (`tipo_funcionario`)
+    REFERENCES `empresa`.`tipo_funcionario` (`idtipo_funcionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `empresa`.`cliente` (
+  `idcliente` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(45) NULL,
+  `cpf` VARCHAR(45) NOT NULL,
+  `endereco` VARCHAR(45) NULL,
+  `telefone` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `salario_liquido` DOUBLE NOT NULL,
+  `salario_bruto` DOUBLE NOT NULL,
+  `margem_consignal` FLOAT NOT NULL,
+  PRIMARY KEY (`idcliente`),
+  UNIQUE INDEX `idcliente_UNIQUE` (`idcliente` ASC) VISIBLE,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+  UNIQUE INDEX `telefone_UNIQUE` (`telefone` ASC) VISIBLE,
+  UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC) VISIBLE);
+
+CREATE TABLE `empresa`.`conta` (
+  `idconta` INT NOT NULL AUTO_INCREMENT,
+  `banco` VARCHAR(45) NOT NULL,
+  `agencia` VARCHAR(45) NOT NULL,
+  `num_conta` VARCHAR(45) NOT NULL,
+  `chave_pix` VARCHAR(45) NULL,
+  `cliente_conta` INT NOT NULL,
+  PRIMARY KEY (`idconta`),
+  UNIQUE INDEX `idconta_UNIQUE` (`idconta` ASC) VISIBLE,
+  UNIQUE INDEX `num_conta_UNIQUE` (`num_conta` ASC) VISIBLE,
+  UNIQUE INDEX `chave_pix_UNIQUE` (`chave_pix` ASC) VISIBLE,
+  INDEX `cliente_conta_idx` (`cliente_conta` ASC) VISIBLE,
+  CONSTRAINT `cliente_conta`
+    FOREIGN KEY (`cliente_conta`)
+    REFERENCES `empresa`.`cliente` (`idcliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `empresa`.`emprestimo` (
+  `idemprestimo` INT NOT NULL AUTO_INCREMENT,
+  `valor` DOUBLE NOT NULL,
+  `taxa_juros` FLOAT NOT NULL,
+  `prazo` DATE NOT NULL,
+  `data_concessao` DATE NOT NULL,
+  `correspondente_bancario` INT NOT NULL,
+  `tipo_emprestimo` INT NOT NULL,
+  `conta` INT NOT NULL,
+  PRIMARY KEY (`idemprestimo`),
+  UNIQUE INDEX `idemprestimo_UNIQUE` (`idemprestimo` ASC) VISIBLE,
+  INDEX `correspondente_bancario_idx` (`correspondente_bancario` ASC) VISIBLE,
+  INDEX `tipo_emprestimo_idx` (`tipo_emprestimo` ASC) VISIBLE,
+  INDEX `conta_idx` (`conta` ASC) VISIBLE,
+  CONSTRAINT `correspondente_bancario`
+    FOREIGN KEY (`correspondente_bancario`)
+    REFERENCES `empresa`.`funcionario` (`idfuncionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `tipo_emprestimo`
+    FOREIGN KEY (`tipo_emprestimo`)
+    REFERENCES `empresa`.`tipo_emprestimo` (`idtipo_emprestimo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `conta`
+    FOREIGN KEY (`conta`)
+    REFERENCES `empresa`.`conta` (`idconta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `empresa`.`prest_emprestimo` (
+  `idprest_emprestimo` INT NOT NULL AUTO_INCREMENT,
+  `num_parcelas` INT NOT NULL,
+  `valor` DOUBLE NOT NULL,
+  `data_vencimento` DATE NOT NULL,
+  `emprestimo` INT NOT NULL,
+  PRIMARY KEY (`idprest_emprestimo`),
+  UNIQUE INDEX `idprest_emprestimo_UNIQUE` (`idprest_emprestimo` ASC) VISIBLE,
+  UNIQUE INDEX `emprestimo_UNIQUE` (`emprestimo` ASC) VISIBLE,
+  CONSTRAINT `emprestimo`
+    FOREIGN KEY (`emprestimo`)
+    REFERENCES `empresa`.`emprestimo` (`idemprestimo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `empresa`.`parcela_paga` (
+  `idparcela_paga` INT NOT NULL AUTO_INCREMENT,
+  `data_pagamento` DATE NOT NULL,
+  `valor_parcela` DOUBLE NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  `prestacao_emprestimo` INT NOT NULL,
+  PRIMARY KEY (`idparcela_paga`),
+  UNIQUE INDEX `idparcela_paga_UNIQUE` (`idparcela_paga` ASC) VISIBLE,
+  INDEX `prestacao_emprestimo_idx` (`prestacao_emprestimo` ASC) VISIBLE,
+  CONSTRAINT `prestacao_emprestimo`
+    FOREIGN KEY (`prestacao_emprestimo`)
+    REFERENCES `empresa`.`prest_emprestimo` (`idprest_emprestimo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
