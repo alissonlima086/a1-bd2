@@ -141,3 +141,29 @@ CHANGE COLUMN `prazo` `prazo` INT NOT NULL ;
 
 ALTER TABLE `empresa`.`prest_emprestimo` 
 DROP COLUMN `valor`;
+
+ALTER TABLE `empresa`.`emprestimo` 
+ADD COLUMN `valor_comissao` FLOAT NOT NULL AFTER `conta`;
+
+CREATE TABLE `empresa`.`registro_comissao` (
+  `idregistro_comissao` INT NOT NULL AUTO_INCREMENT,
+  `valor` DOUBLE NOT NULL,
+  `data` DATE NOT NULL,
+  `funcionario` INT NULL,
+  PRIMARY KEY (`idregistro_comissao`),
+  UNIQUE INDEX `idregistro_comissao_UNIQUE` (`idregistro_comissao` ASC) VISIBLE,
+  INDEX `funcionario_idx` (`funcionario` ASC) VISIBLE,
+  CONSTRAINT `funcionario`
+    FOREIGN KEY (`funcionario`)
+    REFERENCES `empresa`.`funcionario` (`idfuncionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+ALTER TABLE `empresa`.`registro_comissao` 
+DROP FOREIGN KEY `funcionario`;
+ALTER TABLE `empresa`.`registro_comissao` 
+CHANGE COLUMN `funcionario` `funcionario` INT NOT NULL ;
+ALTER TABLE `empresa`.`registro_comissao` 
+ADD CONSTRAINT `funcionario`
+  FOREIGN KEY (`funcionario`)
+  REFERENCES `empresa`.`funcionario` (`idfuncionario`);
