@@ -127,3 +127,17 @@ CREATE TABLE `empresa`.`parcela_paga` (
     REFERENCES `empresa`.`prest_emprestimo` (`idprest_emprestimo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+ALTER TABLE `empresa`.`tipo_emprestimo` 
+ADD COLUMN `taxa_juros` FLOAT NOT NULL AFTER `tipo`,
+ADD COLUMN `prazo` DATE NOT NULL AFTER `taxa_juros`;
+
+ALTER TABLE `empresa`.`emprestimo` 
+DROP COLUMN `prazo`,
+DROP COLUMN `taxa_juros`;
+
+ALTER TABLE `empresa`.`tipo_emprestimo` 
+CHANGE COLUMN `prazo` `prazo` INT NOT NULL ;
+
+ALTER TABLE `empresa`.`prest_emprestimo` 
+DROP COLUMN `valor`;

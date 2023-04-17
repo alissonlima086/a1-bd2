@@ -1,0 +1,32 @@
+INSERT INTO `empresa`.`tipo_funcionario` (`idtipo_funcionario`, `funcao`) VALUES ('1', 'Atendimento');
+INSERT INTO `empresa`.`tipo_funcionario` (`idtipo_funcionario`, `funcao`) VALUES ('2', 'Correspondente Bancario');
+
+
+INSERT INTO `empresa`.`funcionario` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `tipo_funcionario`) VALUES ('Maria', '11111111111', 'Rua tal, quadra tal', '63111111111', 'maria@mail.com', '1');
+INSERT INTO `empresa`.`funcionario` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `tipo_funcionario`) VALUES ('João', '22222222222', 'Rua ficicia', '63222222222', 'joaozinho@mail.com', '2');
+INSERT INTO `empresa`.`funcionario` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `tipo_funcionario`) VALUES ('Yuri', '33333333333', 'Rua BD2 quadra A1', '63333333333', 'yurishin@mail.com', '1');
+INSERT INTO `empresa`.`funcionario` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `tipo_funcionario`) VALUES ('Milena', '44444444444', 'Endereço aleatorio', '63444444444', 'milica@mail.com', '1');
+INSERT INTO `empresa`.`funcionario` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `tipo_funcionario`) VALUES ('Sergio', '55555555555', 'Rua generica 1', '63555555555', 'sergiao@mail.com', '2');
+
+INSERT INTO `empresa`.`tipo_emprestimo` (`tipo`, `taxa_juros`, `prazo`) VALUES ('Consignado', '2', '84');
+INSERT INTO `empresa`.`tipo_emprestimo` (`tipo`, `taxa_juros`, `prazo`) VALUES ('CDB', '22', '60');
+INSERT INTO `empresa`.`tipo_emprestimo` (`tipo`, `taxa_juros`, `prazo`) VALUES ('Consorcio', '0', '180');
+
+INSERT INTO `empresa`.`cliente` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `salario_liquido`, `salario_bruto`, `margem_consignal`) VALUES ('Miguel', '123456789', 'Endereco generico 1', '123456789', 'miguel@mail.com', '5000', '6000', '30');
+INSERT INTO `empresa`.`cliente` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `salario_liquido`, `salario_bruto`, `margem_consignal`) VALUES ('Angela', '234567890', 'Endereco generico 2', '234567890', 'angela@mail.com', '7000', '9000', '45');
+INSERT INTO `empresa`.`cliente` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `salario_liquido`, `salario_bruto`, `margem_consignal`) VALUES ('Mia', '192837465', 'Endereco generico 3', '192837465', 'miau@mail.com', '3000', '3500', '20');
+INSERT INTO `empresa`.`cliente` (`nome`, `cpf`, `endereco`, `telefone`, `email`, `salario_liquido`, `salario_bruto`, `margem_consignal`) VALUES ('Carl', '987654321', 'Endereco generico 4', '987654321', 'carljohns@mail.com', '2000', '2200', '15');
+
+INSERT INTO `empresa`.`conta` (`banco`, `agencia`, `num_conta`, `chave_pix`, `cliente_conta`) VALUES ('Bradesco', '1', '5342', '147258369', '1');
+INSERT INTO `empresa`.`conta` (`banco`, `agencia`, `num_conta`, `chave_pix`, `cliente_conta`) VALUES ('Nubank', '1', '65789', '369852147', '1');
+INSERT INTO `empresa`.`conta` (`banco`, `agencia`, `num_conta`, `chave_pix`, `cliente_conta`) VALUES ('Nubank', '1', '6437', '741852693', '2');
+INSERT INTO `empresa`.`conta` (`banco`, `agencia`, `num_conta`, `chave_pix`, `cliente_conta`) VALUES ('Itau', '2', '91922', '546981237', '3');
+INSERT INTO `empresa`.`conta` (`banco`, `agencia`, `num_conta`, `chave_pix`, `cliente_conta`) VALUES ('Inter', '1', '2113', '478236591', '4');
+
+INSERT INTO `empresa`.`emprestimo` (`valor`, `data_concessao`, `correspondente_bancario`, `tipo_emprestimo`, `conta`) VALUES ('5000', '2023-04-17', '2', '1', '2');
+INSERT INTO `empresa`.`emprestimo` (`valor`, `data_concessao`, `correspondente_bancario`, `tipo_emprestimo`, `conta`) VALUES ('10000', '2020-04-10', '5', '2', '4');
+INSERT INTO `empresa`.`emprestimo` (`valor`, `data_concessao`, `correspondente_bancario`, `tipo_emprestimo`, `conta`) VALUES ('50000', '2023-04-01', '2', '1', '3');
+
+INSERT INTO `empresa`.`prest_emprestimo` (`num_parcelas`, `data_vencimento`, `emprestimo`) VALUES ('10', date_add((select emprestimo.data_concessao from emprestimo where emprestimo.idemprestimo = 1), interval num_parcelas month),'1');
+INSERT INTO `empresa`.`prest_emprestimo` (`num_parcelas`, `data_vencimento`, `emprestimo`) VALUES ('20', date_add((select emprestimo.data_concessao from emprestimo where emprestimo.idemprestimo = 2), interval num_parcelas month), '2');
+INSERT INTO `empresa`.`prest_emprestimo` (`num_parcelas`, `data_vencimento`, `emprestimo`) VALUES ('50', date_add((select emprestimo.data_concessao from emprestimo where emprestimo.idemprestimo = 3), interval num_parcelas month), '3');
